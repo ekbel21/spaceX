@@ -122,6 +122,9 @@ class _NavigationExampleState extends State<NavigationExample> {
     );
   }
 
+
+
+
   Widget _buildLaunches() {
     return Consumer<LaunchesProvider>(
       builder: (context, provider, child) {
@@ -148,32 +151,36 @@ class _NavigationExampleState extends State<NavigationExample> {
     );
   }
 
-  Widget _buildMissions() {
-    return Material(
-      child: Container(
-        decoration: AppStyle.missionBackgroundDecoration,
-        child: FutureBuilder(
-          future: MissionsController().getAllMissions(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
-              List<MissionsModel> missions = snapshot.data!;
-              // Apply search and filter logic here if needed
-              return ListView.builder(
-                itemCount: missions.length,
-                itemBuilder: (context, index) {
-                  return MissionsCellView(missions[index]);
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              return const Center(child: Text('No data available'));
-            }
-          },
-        ),
+ Widget _buildMissions() {
+  return Material(
+    child: Container(
+      decoration: AppStyle.missionBackgroundDecoration,
+      child: FutureBuilder(
+        future: MissionsController().getAllMissions(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            List<MissionsModel> missions = snapshot.data!;
+           List<MissionsModel> filteredMissions = missions.where((mission) {
+  return mission.missionName?.toLowerCase().contains(_searchText.toLowerCase()) ?? false;
+}).toList();
+
+            return ListView.builder(
+              itemCount: filteredMissions.length,
+              itemBuilder: (context, index) {
+                return MissionsCellView(filteredMissions[index]);
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return const Center(child: Text('No data available'));
+          }
+        },
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
