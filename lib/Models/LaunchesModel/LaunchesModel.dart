@@ -3,10 +3,7 @@ import 'LaunchSiteModel.dart';
 import 'LinksModel.dart';
 import 'TelemetryModel.dart';
 import 'TimelineModel.dart';
-
 import 'rocketModel.dart';
-
-
 
 class LaunchesModel {
   int flightNumber;
@@ -84,11 +81,11 @@ class LaunchesModel {
           ? LaunchFailureDetailsModel.fromJson(json['launch_failure_details']) 
           : LaunchFailureDetailsModel(time: 0, altitude: 0, reason: ''),
       links: LinksModel.fromJson(json['links']),
-      details: json['details'],
-      staticFireDateUtc: json['static_fire_date_utc'],
-      staticFireDateUnix: json['static_fire_date_unix'],
+      details: json['details'] ?? '',
+      staticFireDateUtc: json['static_fire_date_utc'] ?? '',
+      staticFireDateUnix: json['static_fire_date_unix'] ?? 0,
       timeline: TimelineModel.fromJson(json['timeline']),
-      crew: json['crew']
+      crew: json['crew'] ?? ''
     );
   }
 
